@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+<!-- 引入外部的属性配置文件 -->
+<context:property-placeholder location="classpath:jdbc.properties" />
+
+<!-- 配置数据源 --><!--配置连接池c3p0  -->
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${jdbc.driver}" />
+	<property name="jdbcUrl" value="${jdbc.url}"/>
+	<property name="user" value="${jdbc.user}"/>
+	<property name="password" value="${jdbc.password}"/>
+</bean>
+
+<!-- 配置 Hibernate相关属性 -->
+<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	<!--注入数据源 此处使用C3p0连接池  -->
+	<property name="dataSource" ref="dataSource"/>
+	<!-- 配置hibernate的属性 -->
+	<property name="hibernateProperties">
+		<props>
+			<!-- <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop> -->
+			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+			<prop key="hibernate.show_sql">true</prop>
+			<prop key="hibernate.format_sql">true</prop>
+			<prop key="hibernate.hbm2ddl.auto">update</prop>
+		</props>
+	</property> 
+	
+	<!-- 配置hibernate的映射文件的加载 -->
+	<property name="mappingResources">
+		<list>
+			<value>cn/org/kkl/domain/Department.hbm.xml</value>
+			<value>cn/org/kkl/domain/Employee.hbm.xml</value>
+			<!-- <value>/cn/org/kkl/domain/Department.hbm.xml</value>
+			<value>/cn/org/kkl/domain/Employee.hbm.xml</value> -->
+		</list>
+	</property>
+</bean>
+
+<!-- 配置事务管理器 -->
+<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<!-- 开启注解事务 -->
+<!-- <tx:annotation-driven transaction-manager="transactionManager"/> -->
+
+<!-- 开启xml配置形式的事务  -->
+<aop:config>
+	<!-- 配置切入点 -->
+	<aop:pointcut expression="execution(* cn.org.kkl.service..*(..))" id="txPoint"/>
+	<!-- 配置通知  事务增强 -->
+	<aop:advisor pointcut-ref="txPoint" advice-ref="txAdvice"/>
+</aop:config>
+
+<!-- 配置事务增强  事务如何切入 -->
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	<tx:attributes>
+		<tx:method name="*"/><!-- 所有被切入点切入的方法都受事务管理器管理 -->
+		<tx:method name="get*" read-only="true"/><!-- 所遇以get开头，即查询都开启只读模式 -->
+	</tx:attributes>
+</tx:advice>
+
+<!--===========================================================================  -->
+<bean id="employeeAction" class="cn.org.kkl.action.EmployeeAction" scope="prototype">
+	<property name="employeeService" ref="employeeService"/>
+	<property name="departmentService" ref="departmentService"/>
+</bean>
+<bean id="employeeService" class="cn.org.kkl.service.impl.EmployeeServiceImpl">
+	<property name="employeeDao" ref="employeeDao"/>
+</bean>
+<bean id="employeeDao" class="cn.org.kkl.dao.impl.EmployeeDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<bean id="departmentAction" class="cn.org.kkl.action.DepartmentAction" scope="prototype">
+	<property name="departmentService" ref="departmentService"/>
+</bean>
+<bean id="departmentService" class="cn.org.kkl.service.impl.DepartmentServiceImpl">
+	<property name="departmentDao" ref="departmentDao"></property>
+</bean>
+<bean id="departmentDao" class="cn.org.kkl.dao.impl.DepartmentDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+</bean>
+
+</beans>

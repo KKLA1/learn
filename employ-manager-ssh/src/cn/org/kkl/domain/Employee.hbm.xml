@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-4-19 10:03:02 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="cn.org.kkl.domain.Employee" table="EMPLOYEE">
+        <id name="eId" type="java.lang.Integer" access="field">
+            <column name="EID" />
+            <generator class="assigned" />
+        </id>
+        <property name="eName" type="java.lang.String" access="field">
+            <column name="ENAME" />
+        </property>
+        <property name="sex" type="java.lang.String">
+            <column name="SEX" />
+        </property>
+        <property name="birthday" type="java.util.Date">
+            <column name="BIRTHDAY" />
+        </property>
+        <property name="joinDate" type="java.util.Date">
+            <column name="JOINDATE" />
+        </property>
+        <property name="eno" type="java.lang.String">
+            <column name="ENO" />
+        </property>
+        <property name="userName" type="java.lang.String">
+            <column name="USERNAME" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" />
+        </property>
+        <many-to-one name="department" class="cn.org.kkl.domain.Department" fetch="join" lazy="false">
+            <column name="dno" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
