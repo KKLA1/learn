@@ -1,0 +1,152 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<!--模型版本 -->
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- 公司或组织的唯一标识，并且配置时生成的路径也是由此生成的 -->
+	<groupId>cn-org-kkl</groupId>
+
+	<!--本项目的唯一id，一个groupId下面可能有很多个项目，就是靠artifactId来区分的 -->
+	<artifactId>spring-mvc-study</artifactId>
+
+	<!--本版本的所属版本号 -->
+	<version>1.0-SNAPSHOT</version>
+
+	<!--打包的机制：例如pom,jar,maven-plugin,ejb,war,ear,rar,par,默认值是jar -->
+	<packaging>jar</packaging>
+
+	<name>spring-mvc-study Maven Webapp</name>
+
+
+	<url>http://maven.apache.org</url>
+
+	<!-- 配置全局版本管理 参数 为pom配置一些常量，可以在pom的其他地方引用，方便项目的维护 -->
+	<properties>
+		<commons-lang.version>3.6</commons-lang.version>
+		<slf4j.version>1.8.0-beta2</slf4j.version>
+		<!-- <spring.version>5.0.0.RELEASE</spring.version> -->
+		<spring.version>4.1.3.RELEASE</spring.version>
+		
+	</properties>
+
+	<!--2.配置依赖管理 maven可以为我们管理传递依赖和直接依赖关系，当存在依赖版本不同时，maven管理会依据上述配置的版本参数为准 -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<!--scope包含以下范围：compile（编译范围） provided(以提供范围) runtime（运行时范围） test（范围） 
+					system（系统范围） -->
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<!-- 屏蔽依赖关系，比如项目中使用的libA依赖某个库中的1.0版，libB依赖某个库中的2.0版，现在想统一使用2.0版，则需要将libA中依赖的1.0版屏蔽 -->
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/taglibs/standard -->
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<finalName>spring-mvc-study</finalName>
+
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.3.21.v20170918</version>
+			</plugin>
+		</plugins>
+
+		<!--项目的一系列构建扩展,它们是一系列build过程中要使用的产品，会包含在running bulid‘s classpath里面。 -->
+		<!--他们可以开启extensions，也可以通过提供条件来激活plugins。 -->
+		<!--简单来讲，extensions是在build过程被激活的产品 -->
+		<!-- <extensions> 例如，通常情况下，程序开发完成后部署到线上Linux服务器，可能需要经历打包、 将包文件传到服务器、SSH连上服务器、敲命令启动程序等一系列繁琐的步骤。 
+			实际上这些步骤都可以通过Maven的一个插件 wagon-maven-plugin 来自动完成 下面的扩展插件wagon-ssh用于通过SSH的方式连接远程服务器， 
+			类似的还有支持ftp方式的wagon-ftp插件 <extension> <groupId>org.apache.maven.wagon</groupId> 
+			<artifactId>wagon-ssh</artifactId> <version>2.8</version> </extension> </extensions> -->
+
+
+	</build>
+</project>
