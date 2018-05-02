@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.org.kkl</groupId>
+	<artifactId>springmvc-intercepter</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<!-- 为了更好更容易的管理对应jar包的版本 -->
+	<properties>
+		<commons-lang.version>2.4</commons-lang.version>
+		<slf4j.version>1.7.6</slf4j.version>
+		<spring-config-version>4.1.3.RELEASE</spring-config-version>
+		<spring-boot-ct-version>1.5.11.RELEASE</spring-boot-ct-version>
+		<io-spring-platform-version>Brussels-SR5</io-spring-platform-version>
+	</properties>
+
+	<!-- 为了管理项目jar包不同版本之间冲突 -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- 为了解决spring项目中jar包冲突问题 -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring-config-version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- 为了解决boot项目中jar包冲突 -->
+			<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-dependencies</artifactId> 
+				<version>${spring-boot-ct-version}</version> <type>pom</type> <scope>import</scope> 
+				</dependency> 为了解决io平台jar包差异 <dependency> <groupId>io.spring.platform</groupId> 
+				<artifactId>platform-bom</artifactId> <version>${io-spring-platform-version}</version> 
+				<type>pom</type> <scope>import</scope> </dependency> -->
+		</dependencies>
+	</dependencyManagement>
+
+	<!--springmvc需要使用到的jar配置 -->
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons-lang.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
+		<!-- <dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			屏蔽依赖关系，比如项目中使用的libA依赖某个库中的1.0版，libB依赖某个库中的2.0版，现在想统一使用2.0版，则需要将libA中依赖的1.0版屏蔽
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency> -->
+
+	</dependencies>
+
+</project>
